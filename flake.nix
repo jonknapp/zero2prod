@@ -24,7 +24,9 @@
             (pkgs.rust-bin.selectLatestNightlyWith (toolchain:
               toolchain.default.override { extensions = [ "rust-src" ]; }))
           ] ++ (if system == "x86_64-darwin" then
-            [ pkgs.darwin.apple_sdk.frameworks.Security ]
+            [
+              pkgs.darwin.apple_sdk.frameworks.Security # used for cargo-edit
+            ]
           else
             [ ]);
         };
