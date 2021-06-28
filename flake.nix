@@ -17,17 +17,19 @@
           name = "zero2prod";
 
           buildInputs = [
-            pkgs.libgit2 # used for cargo-tarpaulin
+            pkgs.libgit2 # needed for cargo-tarpaulin
             pkgs.nixfmt
             pkgs.openssl
             pkgs.pkgconfig
             (pkgs.rust-bin.selectLatestNightlyWith (toolchain:
-              toolchain.default.override { extensions = [ "rust-src" ]; }))
-          ] ++ (if system == "x86_64-darwin" then
-            [
-              pkgs.darwin.apple_sdk.frameworks.Security # used for cargo-edit
-            ]
-          else
+              toolchain.default.override {
+                extensions = [ "rust-src" ]; # needed for rust-analyzer
+              }))
+          ] ++ (if system == "x86_64-darwin" then [
+            pkgs.darwin.apple_sdk.frameworks.CoreFoundation # needed for sqlx-cli
+            pkgs.darwin.apple_sdk.frameworks.SystemConfiguration # needed for sqlx-cli
+            pkgs.darwin.apple_sdk.frameworks.Security # needed for cargo-edit
+          ] else
             [ ]);
         };
       });
